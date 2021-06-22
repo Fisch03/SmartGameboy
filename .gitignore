@@ -1,0 +1,10 @@
+*.code-workspace
+
+gb/makerom.cmd
+gb/*.gb
+gb/*.o
+
+esp32/.pio
+esp32/.vscode/*
+
+esp32/include/secret.h
