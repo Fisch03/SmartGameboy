@@ -9,7 +9,7 @@ ID_STAT EQU $04
 ID_MSG  EQU $05
 
 SECTION "Serial", ROM0[$0058]
-	jp s_isr
+    jp s_isr
 
 SECTION "s_var", WRAM0
 ;serial status - lsb takes priority
@@ -44,9 +44,9 @@ s_buf: ds 4096
 
 SECTION "serial", ROM0
 MACRO s_send_byte
-	ld [rSB], a
-	ld a, $81
-	ld [rSC], a
+    ld [rSB], a
+    ld a, $81
+    ld [rSC], a
 ENDM
 
 MACRO s_rcv_byte
@@ -99,23 +99,23 @@ s_send_req:
 ;--HELPER FUNCTIONS--
 s_err_ack:
     di
-	lcd_WaitVRAM
+    lcd_WaitVRAM
 
     ld hl, .msg
-	ld de, _SCRN0 + (SCRN_VY_B*2)
-	ld bc, .msg_e-.msg
-	call mem_CopyVRAM
+    ld de, _SCRN0 + (SCRN_VY_B*2)
+    ld bc, .msg_e-.msg
+    call mem_CopyVRAM
 
-	ld a, [rSB]
-	ld [_SCRN0 + (SCRN_VY_B*3)], a
+    ld a, [rSB]
+    ld [_SCRN0 + (SCRN_VY_B*3)], a
 
 .loop:
-	halt
-	nop
-	jp .loop
+    halt
+    nop
+    jp .loop
 
 .msg:
-	db "Err-No Ack"
+    db "Err-No Ack"
 .msg_e:
 
 ;--ISR--
@@ -184,21 +184,21 @@ s_isr:
     push hl
 
     ld a, [s_ptr]
-	ld h, a
-	ld a, [s_ptr+1]
-	ld l, a
+    ld h, a
+    ld a, [s_ptr+1]
+    ld l, a
 
-	ld a, [s_len]
-	ld b, a
-	ld a, [s_len+1]
-	ld c, a
+    ld a, [s_len]
+    ld b, a
+    ld a, [s_len+1]
+    ld c, a
 
-	ld a, b
-	cp 0
-	jr nz, :+
-	ld a, c
-	cp 0
-	jr nz, :+
+    ld a, b
+    cp 0
+    jr nz, :+
+    ld a, c
+    cp 0
+    jr nz, :+
 
     ld a, [s_state]
     res SS_SND_pos, a
@@ -209,18 +209,18 @@ s_isr:
     jr :++
 
 :   ld a, [hl+]
-	dec bc
-	s_send_byte
+    dec bc
+    s_send_byte
 
-	ld a, h
-	ld [s_ptr], a
-	ld a, l
-	ld [s_ptr+1], a
+    ld a, h
+    ld [s_ptr], a
+    ld a, l
+    ld [s_ptr+1], a
 
-	ld a, b
-	ld [s_len], a
-	ld a, c
-	ld [s_len+1], a
+    ld a, b
+    ld [s_len], a
+    ld a, c
+    ld [s_len+1], a
 
 :   pop hl
     pop bc
@@ -277,24 +277,24 @@ s_isr:
     ld hl, s_buf
 
     ld a, [s_ptr]
-	ld d, a
-	ld a, [s_ptr+1]
-	ld e, a
+    ld d, a
+    ld a, [s_ptr+1]
+    ld e, a
 
     add hl, de
 
     ld a, [rSB]
     ld [hl+], a
-	inc de
+    inc de
 
     ld a, [s_len]
     sub d
-	cp 0
-	jr nz, :+
-	ld a, [s_len+1]
+    cp 0
+    jr nz, :+
+    ld a, [s_len+1]
     sub e
-	cp 0
-	jr nz, :+
+    cp 0
+    jr nz, :+
 
     ld a, [s_state]
     res SS_RCV_pos, a
@@ -303,9 +303,9 @@ s_isr:
     jr :++
 
 :	ld a, d
-	ld [s_ptr], a
-	ld a, e
-	ld [s_ptr+1], a
+    ld [s_ptr], a
+    ld a, e
+    ld [s_ptr+1], a
 
 :   s_rcv_byte
 
